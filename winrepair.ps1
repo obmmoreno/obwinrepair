@@ -1,5 +1,13 @@
 do {
     Clear-Host
+    Write-Host @" 
+________                   __________          __                     .____    .____   _________  
+\_____  \___  __ __________\______   \___.__._/  |_  ____   ______    |    |   |    |  \_   ___ \ 
+ /   |   \  \/ // __ \_  __ \    |  _<   |  |\   __\/ __ \ /  ___/    |    |   |    |  /    \  \/ 
+/    |    \   /\  ___/|  | \/    |   \\___  | |  | \  ___/ \___ \     |    |___|    |__\     \____
+\_______  /\_/  \___  |__|  |______  // ____| |__|  \___  >____  > /\ |_______ \_______ \______  /
+        \/          \/             \/ \/                \/     \/  \/         \/       \/      \/ 
+"@ -ForegroundColor Gray
     Write-Host "Choose an option:" -ForegroundColor DarkCyan
     Write-Host @"
 1. Release and Renew IP Address
@@ -14,12 +22,10 @@ do {
 10. Enable Remote Desktop
 11. Set Firewall Profiles to Allow All
 12. CheckDisk C:\
-13. Imaging Software Fixes
-14. Download and Install Microsoft Visual C++ 2015-2022
-15. Schick Drivers
-16. Eaglesoft Download
-17. Advanced IPScanner 
-18. Exit
+13. Download and Install Microsoft Visual C++ 2015-2022
+14. Advanced IPScanner 
+15. Imaging Software Fixes
+16. Exit
 "@ -ForegroundColor Magenta
   
     $choice = Read-Host "Enter the number of your choice"
@@ -113,12 +119,30 @@ foreach ($adapter in $adapters) {
             Read-Host     
         }
         "13" {
-            Write-Host "Entering Imaging Software Fixes Section..." -ForegroundColor Blue
+            Write-Host "Downloading C++" -ForegroundColor Magenta
+            mkdir C:\obsoftware;Invoke-WebRequest https://aka.ms/vs/17/release/vc_redist.x64.exe -OutFile C:\obsoftware\c++.exe;Invoke-WebRequest https://aka.ms/vs/17/release/vc_redist.x86.exe -OutFile C:\obsoftware\C++x86.exe;C:\obsoftware\C++.exe;C:\obsoftware\C++x86.exe;Write-Host "Press Enter to Continue" -ForegroundColor Magenta;Read-Host
+          
+        }
+        "14" {
+            Invoke-RestMethod https://download.advanced-ip-scanner.com/download/files/Advanced_IP_Scanner_2.5.4594.1.exe -Outfile C:\ipscanner.exe; Start-Process C:\ipscanner.exe
+            Write-Host "Press Enter to go back (this will delete the app, make sure its closed)" -ForegroundColor Cyan
+            
+            Read-Host
+            Remove-Item C:\ipscanner.exe -Force
+
+        }
+        "15" {
+            Write-Host "Entering Imaging Software Section..." -ForegroundColor Blue
             do {
                 Clear-Host
+                Write-Host "Imaging Software Section" -ForegroundColor DarkCyan
                 $imagingchoice = Read-Host @"
-1. EzDent-i DLL error during IO acquisition
-2. Exit Imaging Software Fixes Section
+
+1. EzDent-i Fix: DLL error during IO acquisition
+2. Schick Drivers
+3. Eaglesoft Download
+4. Exit Imaging Software Fixes Section
+
 Enter the number of your choice
 "@
                 switch ($imagingchoice) {
@@ -146,6 +170,18 @@ Enter the number of your choice
                         Read-Host
                     }
                     "2" {
+                        Start-Process msedge.exe '--new-window https://www.dentsplysironasupport.com/en-us/user_section/user_section_imaging/schick_brand_software.html'
+                        Write-Host "Press Enter to go back" -ForegroundColor Cyan
+                        Read-Host
+
+                    }
+                    "3" {
+                        Start-Process msedge.exe '--new-window https://pattersonsupport.custhelp.com/app/answers/detail/a_id/23400#New%20Server'
+                        Write-Host "Press Enter to go back" -ForegroundColor Cyan
+                        Read-Host
+
+                    }
+                    "4" {
                         Write-Host "Exiting Imaging Software Fixes Section..." -ForegroundColor Blue
                     }
                     Default {
@@ -153,33 +189,9 @@ Enter the number of your choice
                         Read-Host "Press Enter to try again"
                     }
                 }
-            } while ($imagingchoice -ne "2")  # Loop until the user selects to exit
+            } while ($imagingchoice -ne "4")  # Loop until the user selects to exit
         }
-        "14" {
-            Write-Host "Downloading C++" -ForegroundColor Magenta
-            md C:\obsoftware;iwr https://aka.ms/vs/17/release/vc_redist.x64.exe -OutFile C:\obsoftware\c++.exe;iwr https://aka.ms/vs/17/release/vc_redist.x86.exe -OutFile C:\obsoftware\C++x86.exe;C:\obsoftware\C++.exe;C:\obsoftware\C++x86.exe;Write-Host "Press Enter to Continue" -ForegroundColor Magenta;Read-Host
-          
+
         }
-        "15" {
-             Start-Process msedge.exe '--new-window https://www.dentsplysironasupport.com/en-us/user_section/user_section_imaging/schick_brand_software.html'
-             Write-Host "Press Enter to go back" -ForegroundColor Cyan
-             Read-Host
 
-            }
-            "16" {
-             Start-Process msedge.exe '--new-window https://pattersonsupport.custhelp.com/app/answers/detail/a_id/23400'
-             Write-Host "Press Enter to go back" -ForegroundColor Cyan
-             Read-Host
-
-            }
-            "17" {
-             irm https://download.advanced-ip-scanner.com/download/files/Advanced_IP_Scanner_2.5.4594.1.exe -Outfile C:\ipscanner.exe; Start-Process C:\ipscanner.exe
-             Write-Host "Press Enter to go back (this will delete the app, make sure its closed)" -ForegroundColor Cyan
-             
-             Read-Host
-             Remove-Item C:\ipscanner.exe -Force
-
-            }
-            }
-
-} while ($choice -ne "18")
+} while ($choice -ne "16")
